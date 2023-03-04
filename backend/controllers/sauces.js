@@ -1,6 +1,5 @@
 const Sauce = require('../models/Sauce')
 const fs = require('fs')
-const sauce = require('../models/Sauce')
 
 // The user can create a sauce.
 exports.createSauce = (req, res, next) => {
@@ -38,7 +37,7 @@ exports.modifySauce = (req, res, next) => {
   delete sauceObject._userId
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
-      if (sauce.userId != req.auth.userId) { res.status(401).json({ message: 'Not authorized' }) }
+      if (sauce.userId != req.auth.userId) { res.status(403).json({ message: 'unauthorized request' }) }
       else {
         Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
           .then(() => { res.status(200).json({ message: 'Objet modifié!' }) })
@@ -53,7 +52,7 @@ exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
       if (sauce.userId != req.auth.userId) {
-        res.status(401).json({ message: 'Not authorized' })
+        res.status(403).json({ message: 'unauthorized request' })
       } else {
         const filename = sauce.imageUrl.split('/images/')[1]
         fs.unlink(`images/${filename}`, () => {
@@ -66,20 +65,20 @@ exports.deleteSauce = (req, res, next) => {
     .catch (error => { res.status(500).json({ error }) })
 }
 
-// View get all sauces.
+// The user can view get all sauces.
 exports.getAllSauces = (req, res, next) => {
   Sauce.find()
     .then((sauces) => { res.status(200).json(sauces) })
     .catch((error) => { res.status(400).json({ error: error }) })
 }
 
-// User can like and dislike all the sauces.
+// The user can like and dislike all the sauces.
 exports.noticeSauce = (req, res, next) => {
   const like = req.body.like
   const userId = req.body.userId
   const sauceId = req.params.id
   console.log(sauceId)
-  // User like a sauce.
+  // The user like a sauce.
   if (like === 1) {
     Sauce.updateOne(
       { _id: sauceId },
@@ -88,7 +87,7 @@ exports.noticeSauce = (req, res, next) => {
     .then((sauce) => res.status(200).json({ message: "Sauce aimée !" }))
     .catch((error) => res.status(500).json({ error }))
   }
-  // User changes his mind and doesn't like a sauce.
+  // The user changes his mind and doesn't like a sauce.
   else {
     Sauce.findOne({ _id: sauceId })
     .then((sauce) => {
@@ -104,7 +103,7 @@ exports.noticeSauce = (req, res, next) => {
     .catch((error) => { res.status(401).json({ error }) })
   }
   
-  // User dislike a sauce.
+  // The user dislike a sauce.
   if (like === -1) {
     Sauce.updateOne(
       {_id: sauceId},
@@ -114,7 +113,7 @@ exports.noticeSauce = (req, res, next) => {
     .catch((error) => { res.status(500).json({ error }) })
   }
   
-  // User changes his mind and doesn't dislike a sauce.
+  // The user changes his mind and doesn't dislike a sauce.
   else {
     Sauce.findOne({ _id: sauceId })
     .then((sauce) => {
