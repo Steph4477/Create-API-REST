@@ -4,8 +4,11 @@ const saucesRoutes = require('./routes/sauces')
 const userRoutes = require('./routes/user')
 const path = require('path')
 const helmet = require("helmet")
+const dotenv = require("dotenv")
 
-mongoose.connect('mongodb+srv://Stephane:CestmonMDP@cluster0.axkt8t4.mongodb.net/?retryWrites=true&w=majority',{
+dotenv.config()
+
+mongoose.connect(`mongodb+srv://${process.env.LOGIN}:${process.env.PASSWORD}@cluster0.axkt8t4.mongodb.net/?retryWrites=true&w=majority`,{
   useNewUrlParser: true,
   useUnifiedTopology: true 
 })
