@@ -1,9 +1,7 @@
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const jwt = require('jsonwebtoken')
+const User = require('../models/User')
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
-
-
 
 exports.signup = (req, res, next) => {
     if (!emailRegex.test(req.body.email)){
@@ -41,7 +39,7 @@ exports.login = (req, res, next) => {
                         userId: user._id,
                         token: jwt.sign(
                             { userId: user._id },
-                            'RANDOM_TOKEN_SECRET',
+                            process.env.SECRET_KEY,
                             { expiresIn: '24h' }
                         )
                     });
@@ -49,4 +47,4 @@ exports.login = (req, res, next) => {
                 .catch(error => res.status(500).json({ error }))
         })
         .catch(error => res.status(500).json({ error }))
-};
+}

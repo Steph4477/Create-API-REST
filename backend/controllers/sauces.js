@@ -59,7 +59,6 @@ exports.modifySauce = (req, res, next) => {
   .catch((error) => { res.status(500).json({ error: "Impossible de trouver la sauce pour la modifier !" }) })
 }
 
-
 // The user can delete a sauce he has created.
 exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
