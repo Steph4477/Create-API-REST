@@ -6,6 +6,7 @@ const path = require('path')
 const helmet = require("helmet")
 const dotenv = require("dotenv")
 
+
 dotenv.config()
 
 mongoose.connect(`mongodb+srv://${process.env.LOGIN}:${process.env.PASSWORD}@cluster0.axkt8t4.mongodb.net/?retryWrites=true&w=majority`,{
@@ -25,7 +26,7 @@ app.use((req, res, next) => {
   next()
 })
 
-// Using helmet to encrypt database data to counter XSS attacks.
+// Automatically adds or removes HTTP headers to comply with web security standards
 app.use( helmet({ crossOriginResourcePolicy: false} ))
 
 app.use('/images', express.static(path.join(__dirname, 'images')))
